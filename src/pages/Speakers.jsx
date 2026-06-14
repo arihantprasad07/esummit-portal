@@ -1,4 +1,4 @@
-import { ExternalLink, Share2 } from 'lucide-react'
+import { ExternalLink } from 'lucide-react'
 
 const speakers = [
   { name: 'Priya Kapoor', role: 'Co-founder & CEO', company: 'Nexus AI', topic: 'Building AI Products at Scale', initials: 'PK', color: '#E8304A' },
@@ -37,7 +37,7 @@ export default function Speakers() {
                   <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 14 }}>{s.company}</p>
                   <p style={{ fontSize: 12, color: 'var(--muted)', lineHeight: 1.5, borderTop: '1px solid var(--border)', paddingTop: 12, fontStyle: 'italic' }}>"{s.topic}"</p>
                   <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
-                    {[Linkedin].map((Icon, i) => (
+                    {[ExternalLink].map((Icon, i) => (
                       <a key={i} href="#" style={{ width: 28, height: 28, border: '1px solid var(--border)', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--muted)', transition: 'all 0.15s' }}
                         onMouseEnter={e => { e.currentTarget.style.color = s.color; e.currentTarget.style.borderColor = `${s.color}55`; }}
                         onMouseLeave={e => { e.currentTarget.style.color = 'var(--muted)'; e.currentTarget.style.borderColor = 'var(--border)'; }}>
