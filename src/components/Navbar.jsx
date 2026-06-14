@@ -7,6 +7,7 @@ const links = [
   { to: '/events', label: 'Events' },
   { to: '/speakers', label: 'Speakers' },
   { to: '/schedule', label: 'Schedule' },
+  { to: '/features', label: 'Features' },
   { to: '/dashboard', label: 'Dashboard' },
 ]
 
@@ -14,14 +15,13 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const { pathname } = useLocation()
+  const closeMenu = () => setOpen(false)
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 40)
     window.addEventListener('scroll', fn)
     return () => window.removeEventListener('scroll', fn)
   }, [])
-
-  useEffect(() => setOpen(false), [pathname])
 
   return (
     <nav style={{
@@ -32,7 +32,7 @@ export default function Navbar() {
       transition: 'all 0.3s',
     }}>
       <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
-        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <Link to="/" onClick={closeMenu} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{
             width: 32, height: 32, background: 'var(--accent)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -45,7 +45,7 @@ export default function Navbar() {
 
         <div style={{ display: 'flex', gap: 32, alignItems: 'center' }} className="nav-links">
           {links.map(l => (
-            <Link key={l.to} to={l.to} style={{
+            <Link key={l.to} to={l.to} onClick={closeMenu} style={{
               fontSize: 14, fontWeight: 500,
               color: pathname === l.to ? 'var(--accent)' : 'var(--muted)',
               transition: 'color 0.2s',
@@ -55,7 +55,7 @@ export default function Navbar() {
           ))}
         </div>
 
-        <Link to="/register" className="btn btn-primary" style={{ padding: '8px 20px', fontSize: 13 }}>
+        <Link to="/register" onClick={closeMenu} className="btn btn-primary" style={{ padding: '8px 20px', fontSize: 13 }}>
           Register Now
         </Link>
 
@@ -67,9 +67,9 @@ export default function Navbar() {
       {open && (
         <div style={{ background: 'var(--bg2)', borderTop: '1px solid var(--border)', padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: 16 }}>
           {links.map(l => (
-            <Link key={l.to} to={l.to} style={{ fontSize: 15, color: pathname === l.to ? 'var(--accent)' : 'var(--text)' }}>{l.label}</Link>
+            <Link key={l.to} to={l.to} onClick={closeMenu} style={{ fontSize: 15, color: pathname === l.to ? 'var(--accent)' : 'var(--text)' }}>{l.label}</Link>
           ))}
-          <Link to="/register" className="btn btn-primary" style={{ padding: '10px 20px', fontSize: 14, textAlign: 'center', justifyContent: 'center' }}>Register Now</Link>
+          <Link to="/register" onClick={closeMenu} className="btn btn-primary" style={{ padding: '10px 20px', fontSize: 14, textAlign: 'center', justifyContent: 'center' }}>Register Now</Link>
         </div>
       )}
 
