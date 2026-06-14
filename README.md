@@ -1,16 +1,36 @@
-# React + Vite
+# UDAAN '26 — E-Summit IIST
+### Where Founders Are Born.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern flagship entrepreneurship summit portal built for E-Cell IIST Indore.  
+Designed to manage registrations, event information, competitions, speaker sessions, networking, and participant engagement.
 
-Currently, two official plugins are available:
+## 🌐 Live Site
+**[esummit-portal.vercel.app](https://esummit-portal.vercel.app)**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Pages
+| Page | Description |
+|------|-------------|
+| Home | Hero with live countdown, marquee ticker, event highlights |
+| Events | 6 summit events with interactive detail panels |
+| Schedule | 3-day schedule with day tabs and track filters |
+| Register | 3-step registration flow with event selection & confirmation |
+| Dashboard | Participant dashboard with sidebar, networking, notifications |
+| Features | Portal features showcase and 4-step user journey map |
 
-## React Compiler
+## Tech Stack
+React · Vite · React Router · Lucide Icons · CSS Variables
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Key Features
+- Live countdown timer to summit date
+- Scrolling event ticker below navbar
+- Interactive event explorer with sticky detail panel
+- Multi-step registration with event selection
+- Participant dashboard with networking wall
+- Track-based schedule filtering (Pitch / Hackathon / Workshop etc.)
+- Fully responsive — mobile and desktop
 
-## Expanding the ESLint configuration
+## About E-Cell IIST
+E-Cell IIST is the Entrepreneurship Cell of Indore Institute of Science & Technology,  
+dedicated to fostering innovation, startup culture, and entrepreneurial thinking among students.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+**Instagram:** [@ecell_iist_indore](https://instagram.com/ecell_iist_indore)
