@@ -34,25 +34,33 @@ export default function Navbar() {
       <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
         <Link to="/" onClick={closeMenu} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{
-            width: 32, height: 32, background: 'var(--accent)',
+            width: 34, height: 34, background: 'var(--gradient)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontFamily: 'var(--mono)', fontWeight: 700, fontSize: 13, color: '#fff', borderRadius: 4
           }}>E</div>
-          <span style={{ fontWeight: 700, fontSize: 15, letterSpacing: '0.05em' }}>
-            E-SUMMIT <span style={{ color: 'var(--accent)' }}>2026</span>
+          <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.05 }}>
+            <span style={{ fontWeight: 700, fontSize: 13, letterSpacing: '0.06em' }}>E-SUMMIT IIST</span>
+            <span style={{ color: 'var(--accent2)', fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '0.16em', marginTop: 3 }}>UDAAN</span>
           </span>
         </Link>
 
         <div style={{ display: 'flex', gap: 32, alignItems: 'center' }} className="nav-links">
-          {links.map(l => (
-            <Link key={l.to} to={l.to} onClick={closeMenu} style={{
-              fontSize: 14, fontWeight: 500,
-              color: pathname === l.to ? 'var(--accent)' : 'var(--muted)',
-              transition: 'color 0.2s',
-              borderBottom: pathname === l.to ? '1px solid var(--accent)' : '1px solid transparent',
-              paddingBottom: 2,
-            }}>{l.label}</Link>
-          ))}
+          {links.map(l => {
+            const active = pathname === l.to
+
+            return (
+              <Link key={l.to} to={l.to} onClick={closeMenu} style={{
+                position: 'relative',
+                fontSize: 14, fontWeight: 500,
+                color: active ? 'var(--text)' : 'var(--muted)',
+                transition: 'color 0.2s',
+                paddingBottom: 8,
+              }}>
+                {l.label}
+                {active && <span style={{ position: 'absolute', left: '50%', bottom: 0, width: 4, height: 4, borderRadius: '50%', background: 'var(--accent2)', transform: 'translateX(-50%)' }} />}
+              </Link>
+            )
+          })}
         </div>
 
         <Link to="/register" onClick={closeMenu} className="btn btn-primary" style={{ padding: '8px 20px', fontSize: 13 }}>
@@ -67,7 +75,7 @@ export default function Navbar() {
       {open && (
         <div style={{ background: 'var(--bg2)', borderTop: '1px solid var(--border)', padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: 16 }}>
           {links.map(l => (
-            <Link key={l.to} to={l.to} onClick={closeMenu} style={{ fontSize: 15, color: pathname === l.to ? 'var(--accent)' : 'var(--text)' }}>{l.label}</Link>
+            <Link key={l.to} to={l.to} onClick={closeMenu} style={{ fontSize: 15, color: pathname === l.to ? 'var(--accent2)' : 'var(--text)' }}>{l.label}</Link>
           ))}
           <Link to="/register" onClick={closeMenu} className="btn btn-primary" style={{ padding: '10px 20px', fontSize: 14, textAlign: 'center', justifyContent: 'center' }}>Register Now</Link>
         </div>

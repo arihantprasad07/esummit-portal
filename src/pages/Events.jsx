@@ -5,6 +5,8 @@ import { Trophy, Zap, Mic, Users, Globe, TrendingUp, ArrowRight, Clock, Calendar
 const events = [
   {
     id: 1, icon: Trophy, color: '#F5C842', tag: 'Competition',
+    gradient: 'linear-gradient(90deg, #F5A623 0%, #C1121F 100%)',
+    flagship: true,
     title: 'Startup Pitch Competition',
     tagline: 'Present. Persuade. Prevail.',
     desc: 'The centerpiece of E-Summit. Teams of 2–4 pitch their startup idea to a panel of investors and industry leaders. Shortlisted teams get mentoring sessions before the final pitch.',
@@ -15,6 +17,7 @@ const events = [
   },
   {
     id: 2, icon: Zap, color: '#E8304A', tag: 'Build',
+    gradient: 'linear-gradient(90deg, #C1121F 0%, #EC4899 100%)',
     title: 'Build-a-thon (Hackathon)',
     tagline: '36 hours. One problem. Your solution.',
     desc: 'A 36-hour product sprint where teams build tech solutions to real-world problem statements released at the start. Judged on impact, feasibility, and execution.',
@@ -25,6 +28,7 @@ const events = [
   },
   {
     id: 3, icon: Mic, color: '#A78BFA', tag: 'Keynote',
+    gradient: 'linear-gradient(90deg, #A78BFA 0%, #60A5FA 100%)',
     title: 'Founder Keynotes',
     tagline: 'Real stories. No filters.',
     desc: 'Unscripted conversations with founders who\'ve built from scratch — covering failure, funding, and what they wish they\'d known. Open to all registered participants.',
@@ -35,6 +39,7 @@ const events = [
   },
   {
     id: 4, icon: Users, color: '#34D399', tag: 'Networking',
+    gradient: 'linear-gradient(90deg, #34D399 0%, #2DD4BF 100%)',
     title: 'Investor Connect',
     tagline: 'The right room changes everything.',
     desc: 'Curated 1:1 speed-networking sessions with angel investors, VCs, and startup ecosystem players. Slots are allocated based on registration and pitch quality.',
@@ -45,6 +50,7 @@ const events = [
   },
   {
     id: 5, icon: Globe, color: '#F59E0B', tag: 'Exhibition',
+    gradient: 'linear-gradient(90deg, #F5A623 0%, #F97316 100%)',
     title: 'Innovation Fest',
     tagline: 'Show the world what you\'re building.',
     desc: 'An open exhibition floor where student innovators, startups, and college projects display their work. Attendees vote for their favorites alongside expert judges.',
@@ -55,6 +61,7 @@ const events = [
   },
   {
     id: 6, icon: TrendingUp, color: '#60A5FA', tag: 'Workshop',
+    gradient: 'linear-gradient(90deg, #60A5FA 0%, #6366F1 100%)',
     title: 'Growth Workshops',
     tagline: 'Learn from the ones who\'ve done it.',
     desc: 'Parallel hands-on workshops running across all 3 days: Fundraising 101, Product Thinking, Growth Hacking, and No-Code Prototyping. Limited seats per session.',
@@ -89,15 +96,19 @@ export default function Events() {
                   style={{
                     background: 'var(--card)', border: `1px solid ${active === ev.id ? ev.color : 'var(--border)'}`,
                     borderRadius: 8, padding: 24, cursor: 'pointer', transition: 'all 0.2s',
-                    borderLeft: `3px solid ${ev.color}`,
+                    position: 'relative', overflow: 'hidden',
                   }}
                   onMouseEnter={e => e.currentTarget.style.borderColor = ev.color}
-                  onMouseLeave={e => { if (active !== ev.id) e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.borderLeftColor = ev.color; }}>
+                  onMouseLeave={e => { if (active !== ev.id) e.currentTarget.style.borderColor = 'var(--border)'; }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: ev.gradient }} />
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
                     <div style={{ width: 40, height: 40, background: `${ev.color}18`, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <ev.icon size={18} color={ev.color} />
                     </div>
-                    <span style={{ fontSize: 11, fontFamily: 'var(--mono)', color: ev.color, border: `1px solid ${ev.color}44`, padding: '2px 8px', borderRadius: 2, letterSpacing: '0.08em' }}>{ev.tag}</span>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
+                      {ev.flagship && <span style={{ fontSize: 10, fontFamily: 'var(--mono)', color: 'var(--accent2)', border: '1px solid rgba(245,166,35,0.45)', padding: '2px 8px', borderRadius: 2, letterSpacing: '0.08em' }}>FLAGSHIP EVENT</span>}
+                      <span style={{ fontSize: 11, fontFamily: 'var(--mono)', color: ev.color, border: `1px solid ${ev.color}44`, padding: '2px 8px', borderRadius: 2, letterSpacing: '0.08em' }}>{ev.tag}</span>
+                    </div>
                   </div>
                   <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>{ev.title}</h3>
                   <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 16, lineHeight: 1.5 }}>{ev.tagline}</p>
