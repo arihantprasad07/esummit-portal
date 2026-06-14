@@ -1,150 +1,323 @@
-import { Link } from 'react-router-dom'
-import { Calendar, Bell, Trophy, CheckCircle, Clock, MapPin, User, QrCode, Download } from 'lucide-react'
+import { useState } from 'react'
+import {
+  Bell,
+  Calendar,
+  CheckCircle,
+  Download,
+  Edit3,
+  ExternalLink,
+  MapPin,
+  MessageCircle,
+  Trophy,
+  Users,
+} from 'lucide-react'
 
-const registered = [
-  { title: 'Startup Pitch Competition', date: 'Sept 15, 2026', venue: 'Hall B1', status: 'confirmed', badge: 'Semifinalist', color: '#E8304A' },
-  { title: 'Build-a-thon', date: 'Sept 15, 2026', venue: 'Tech Arena', status: 'confirmed', badge: 'Registered', color: '#F5C842' },
-  { title: 'Keynotes & Workshops', date: 'Sept 15–17', venue: 'Auditorium A', status: 'confirmed', badge: 'All-access', color: '#A78BFA' },
+const navItems = ['Overview', 'My Events', 'Schedule', 'Networking', 'Notifications']
+
+const registeredEvents = [
+  {
+    name: 'Startup Pitch Competition',
+    date: 'Sept 15, 2026',
+    format: 'Live pitch + jury Q&A',
+    prize: 'Prize pool: Rs. 1,00,000',
+    status: 'Confirmed',
+    color: '#F5C842',
+  },
+  {
+    name: 'Build-a-thon',
+    date: 'Sept 15-17, 2026',
+    format: '48-hour team build sprint',
+    prize: 'Prize pool: Rs. 75,000',
+    status: 'Pending',
+    color: '#E8304A',
+  },
 ]
 
-const upcoming = [
-  { time: '09:30', title: 'Opening Keynote — Priya Kapoor', day: 'Day 1', type: 'keynote' },
-  { time: '11:00', title: 'Pitch Round 1 Check-in', day: 'Day 1', type: 'important' },
-  { time: '14:00', title: 'Build-a-thon Kickoff', day: 'Day 1', type: 'competition' },
-  { time: '16:30', title: 'Workshop: Product Thinking', day: 'Day 1', type: 'workshop' },
+const dayOneSchedule = [
+  { time: '09:00 AM', title: 'Opening Ceremony', venue: 'Main Stage', track: 'All tracks' },
+  { time: '10:30 AM', title: 'Startup Pitch — Round 1', venue: 'Hall A', track: 'Pitch' },
+  { time: '11:00 AM', title: 'Founder Keynote: "From Zero to Series A"', venue: 'Main Stage', track: 'Keynote' },
+  { time: '12:30 PM', title: 'Lunch & Networking Break', venue: 'Campus Ground', track: 'Networking' },
+  { time: '02:00 PM', title: 'Hackathon Kickoff + Problem Reveal', venue: 'Tech Lab', track: 'Hackathon' },
+  { time: '03:00 PM', title: 'Workshop: Fundraising 101', venue: 'Room B', track: 'Workshop' },
+  { time: '05:00 PM', title: 'Innovation Fest Setup', venue: 'Exhibition Hall', track: 'All tracks' },
+]
+
+const participants = [
+  { name: 'Riya Sharma', college: 'IIST Indore', interest: 'Pitch' },
+  { name: 'Kabir Malhotra', college: 'Medicaps University', interest: 'Hackathon' },
+  { name: 'Ananya Rao', college: 'DAVV Indore', interest: 'Workshop' },
+  { name: 'Dev Mehta', college: 'Acropolis Institute', interest: 'Networking' },
 ]
 
 const notifications = [
-  { msg: 'Pitch deck submission opens in 48 hours.', time: '2h ago', type: 'alert' },
-  { msg: 'Your team slot for Build-a-thon is confirmed: Team Alpha.', time: '1d ago', type: 'success' },
-  { msg: 'Workshop: Product Thinking — seats almost full!', time: '2d ago', type: 'info' },
+  { message: 'Your registration for Startup Pitch is confirmed', time: '2 hours ago' },
+  { message: 'Hackathon problem statements will be released at event start', time: '1 day ago' },
+  { message: 'E-Summit schedule is now live', time: '2 days ago' },
 ]
 
-const typeColor = { keynote: '#A78BFA', important: '#E8304A', competition: '#F5C842', workshop: '#34D399' }
+const trackColors = {
+  Pitch: '#F5C842',
+  Hackathon: '#E8304A',
+  Keynote: '#A78BFA',
+  Workshop: '#60A5FA',
+  Networking: '#34D399',
+  'All tracks': '#8A8F9E',
+}
 
 export default function Dashboard() {
+  const [activeTab, setActiveTab] = useState('Overview')
+
   return (
-    <main style={{ paddingTop: 64, minHeight: '100vh' }}>
-      <div style={{ background: 'var(--bg2)', borderBottom: '1px solid var(--border)', padding: '40px 0 32px' }}>
-        <div className="container">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 20 }}>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-                <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(232,48,74,0.15)', border: '2px solid rgba(232,48,74,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <User size={20} color="var(--accent)" />
-                </div>
-                <div>
-                  <p style={{ fontSize: 12, color: 'var(--muted)', fontFamily: 'var(--mono)', letterSpacing: '0.08em' }}>PARTICIPANT DASHBOARD</p>
-                  <h1 style={{ fontSize: 24, fontWeight: 700 }}>Hey, Arihant 👋</h1>
-                </div>
-              </div>
-              <p style={{ color: 'var(--muted)', fontSize: 14 }}>E-Summit 2026 · IIST Indore · Reg. ID: <span style={{ fontFamily: 'var(--mono)', color: 'var(--accent)' }}>ES26-7482</span></p>
-            </div>
-            <div style={{ display: 'flex', gap: 12 }}>
-              <button className="btn btn-outline" style={{ fontSize: 13, padding: '9px 18px' }}>
-                <QrCode size={15} /> My QR Pass
-              </button>
-              <button className="btn btn-outline" style={{ fontSize: 13, padding: '9px 18px' }}>
-                <Download size={15} /> Schedule PDF
-              </button>
-            </div>
-          </div>
+    <main className="dashboard-page">
+      <aside className="dashboard-sidebar">
+        <div className="dashboard-profile">
+          <div className="dashboard-avatar">AP</div>
+          <h1>Arihant Prasad</h1>
+          <span>Registered Participant</span>
         </div>
-      </div>
 
-      <div className="container section-sm">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 28, alignItems: 'start' }}>
-          <div>
-            {/* Registered Events */}
-            <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Trophy size={18} color="var(--accent)" /> My Events
-            </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 36 }}>
-              {registered.map(ev => (
-                <div key={ev.title} style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 8, padding: 20, borderLeft: `3px solid ${ev.color}` }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 8 }}>
-                    <div>
-                      <h3 style={{ fontSize: 15, fontWeight: 600, marginBottom: 6 }}>{ev.title}</h3>
-                      <div style={{ display: 'flex', gap: 16 }}>
-                        <span style={{ fontSize: 12, color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 4 }}><Calendar size={11} />{ev.date}</span>
-                        <span style={{ fontSize: 12, color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 4 }}><MapPin size={11} />{ev.venue}</span>
-                      </div>
-                    </div>
-                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                      <span style={{ fontSize: 11, fontFamily: 'var(--mono)', color: ev.color, border: `1px solid ${ev.color}44`, padding: '2px 9px', borderRadius: 2, letterSpacing: '0.07em' }}>{ev.badge}</span>
-                      <CheckCircle size={15} color="#34D399" />
-                    </div>
-                  </div>
-                </div>
-              ))}
-              <Link to="/events" style={{ fontSize: 13, color: 'var(--accent)', display: 'flex', alignItems: 'center', gap: 5, padding: '8px 0' }}>+ Add more events →</Link>
-            </div>
+        <nav className="dashboard-nav" aria-label="Dashboard sections">
+          {navItems.map((item) => (
+            <button
+              key={item}
+              type="button"
+              onClick={() => setActiveTab(item)}
+              className={activeTab === item ? 'active' : ''}
+            >
+              {item}
+            </button>
+          ))}
+        </nav>
+      </aside>
 
-            {/* Upcoming sessions */}
-            <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Clock size={18} color="var(--accent)" /> Upcoming — Day 1
-            </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {upcoming.map((u, i) => (
-                <div key={i} style={{ display: 'flex', gap: 16, padding: '12px 16px', background: 'var(--card)', borderRadius: 6, border: '1px solid var(--border)', borderLeft: `3px solid ${typeColor[u.type]}`, alignItems: 'center' }}>
-                  <span style={{ fontFamily: 'var(--mono)', fontSize: 12, color: 'var(--muted)', minWidth: 45 }}>{u.time}</span>
-                  <span style={{ fontSize: 14, fontWeight: 500 }}>{u.title}</span>
-                  <span style={{ marginLeft: 'auto', fontSize: 11, color: typeColor[u.type], border: `1px solid ${typeColor[u.type]}44`, padding: '1px 8px', borderRadius: 2, fontFamily: 'var(--mono)', whiteSpace: 'nowrap' }}>{u.type}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Right column */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-            {/* Stats */}
-            <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 8, padding: 20 }}>
-              <p style={{ fontSize: 12, fontFamily: 'var(--mono)', color: 'var(--muted)', letterSpacing: '0.1em', marginBottom: 14 }}>YOUR STATS</p>
-              {[
-                { label: 'Events registered', val: '3' },
-                { label: 'Days attending', val: '3 / 3' },
-                { label: 'Profile completion', val: '85%' },
-              ].map(s => (
-                <div key={s.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '9px 0', borderBottom: '1px solid var(--border)', fontSize: 14 }}>
-                  <span style={{ color: 'var(--muted)' }}>{s.label}</span>
-                  <span style={{ fontWeight: 700, color: 'var(--accent)' }}>{s.val}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* Notifications */}
-            <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 8, padding: 20 }}>
-              <p style={{ fontSize: 12, fontFamily: 'var(--mono)', color: 'var(--muted)', letterSpacing: '0.1em', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 6 }}>
-                <Bell size={12} />NOTIFICATIONS
-              </p>
-              {notifications.map((n, i) => (
-                <div key={i} style={{ padding: '10px 0', borderBottom: i < notifications.length - 1 ? '1px solid var(--border)' : 'none' }}>
-                  <p style={{ fontSize: 13, color: 'var(--text)', lineHeight: 1.5, marginBottom: 4 }}>{n.msg}</p>
-                  <p style={{ fontSize: 11, color: 'var(--muted)', fontFamily: 'var(--mono)' }}>{n.time}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* Quick links */}
-            <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 8, padding: 20 }}>
-              <p style={{ fontSize: 12, fontFamily: 'var(--mono)', color: 'var(--muted)', letterSpacing: '0.1em', marginBottom: 12 }}>QUICK LINKS</p>
-              {[
-                { label: 'Submit pitch deck', to: '#' },
-                { label: 'View full schedule', to: '/schedule' },
-                { label: 'Speaker profiles', to: '/speakers' },
-                { label: 'Venue & directions', to: '#' },
-                { label: 'Contact team', to: '#' },
-              ].map(l => (
-                <Link key={l.label} to={l.to} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '9px 0', borderBottom: '1px solid var(--border)', fontSize: 13, color: 'var(--muted)', transition: 'color 0.15s' }}
-                  onMouseEnter={e => e.currentTarget.style.color = 'var(--accent)'}
-                  onMouseLeave={e => e.currentTarget.style.color = 'var(--muted)'}>
-                  {l.label} <span style={{ fontSize: 16 }}>→</span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+      <section className="dashboard-content">
+        {activeTab === 'Overview' && <Overview />}
+        {activeTab === 'My Events' && <MyEvents />}
+        {activeTab === 'Schedule' && <Schedule />}
+        {activeTab === 'Networking' && <Networking />}
+        {activeTab === 'Notifications' && <Notifications />}
+      </section>
     </main>
   )
+}
+
+function Overview() {
+  return (
+    <div className="dashboard-stack">
+      <section className="dashboard-banner">
+        <div>
+          <p>Saturday, Sept 12, 2026</p>
+          <h2>Welcome back, Arihant 👋</h2>
+        </div>
+        <span>Reg. ID ES26-7482</span>
+      </section>
+
+      <div className="dashboard-stats">
+        <StatCard icon={Trophy} value="2" label="Events Registered" />
+        <StatCard icon={Calendar} value="3" label="Days to Go" />
+        <StatCard icon={Bell} value="1" label="Message" />
+      </div>
+
+      <SectionHeader title="My Registered Events" />
+      <div className="dashboard-event-grid">
+        {registeredEvents.map((event) => (
+          <EventSummaryCard key={event.name} event={event} />
+        ))}
+      </div>
+
+      <SectionHeader title="Upcoming Sessions Today" />
+      <div className="dashboard-list">
+        {dayOneSchedule.slice(0, 2).map((session) => (
+          <SessionRow key={session.title} session={session} compact />
+        ))}
+      </div>
+
+      <SectionHeader title="Quick Links" />
+      <div className="dashboard-quick-links">
+        {[
+          { label: 'View Schedule', icon: Calendar },
+          { label: 'Edit Profile', icon: Edit3 },
+          { label: 'Download Pass', icon: Download },
+          { label: 'Join WhatsApp Group', icon: MessageCircle },
+        ].map((link) => (
+          <QuickLinkButton key={link.label} link={link} />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function MyEvents() {
+  return (
+    <div className="dashboard-stack">
+      <SectionHeader title="My Events" subtitle="Your registered summit tracks and current confirmation status." />
+      <div className="dashboard-list">
+        {registeredEvents.map((event) => (
+          <article key={event.name} className="dashboard-detail-card" style={{ borderLeftColor: event.color }}>
+            <div>
+              <div className="dashboard-card-title-row">
+                <h3>{event.name}</h3>
+                <StatusBadge status={event.status} />
+              </div>
+              <div className="dashboard-meta-grid">
+                <Meta icon={Calendar} label="Date" value={event.date} />
+                <Meta icon={Users} label="Format" value={event.format} />
+                <Meta icon={Trophy} label="Prize" value={event.prize} />
+              </div>
+            </div>
+            <button type="button" className="dashboard-action">
+              View Details
+              <ExternalLink size={14} />
+            </button>
+          </article>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function Schedule() {
+  return (
+    <div className="dashboard-stack">
+      <SectionHeader title="Mini Schedule" subtitle="Day 1 sessions at a glance." />
+      <div className="dashboard-list">
+        {dayOneSchedule.map((session) => (
+          <SessionRow key={session.title} session={session} />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function Networking() {
+  return (
+    <div className="dashboard-stack">
+      <SectionHeader title="Connect with Participants" subtitle="Find people attending similar sessions and events." />
+      <div className="dashboard-people-grid">
+        {participants.map((person) => (
+          <article key={person.name} className="dashboard-person-card">
+            <div className="dashboard-person-avatar">{getInitials(person.name)}</div>
+            <h3>{person.name}</h3>
+            <p>{person.college}</p>
+            <span>{person.interest}</span>
+            <button type="button">Connect</button>
+          </article>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function Notifications() {
+  return (
+    <div className="dashboard-stack">
+      <SectionHeader title="Notifications" subtitle="Latest updates for your E-Summit registration." />
+      <div className="dashboard-list">
+        {notifications.map((notification) => (
+          <article key={notification.message} className="dashboard-notification">
+            <div>
+              <Bell size={15} />
+            </div>
+            <div>
+              <p>{notification.message}</p>
+              <span>{notification.time}</span>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function StatCard({ icon: Icon, value, label }) {
+  return (
+    <article className="dashboard-stat-card">
+      <Icon size={18} />
+      <strong>{value}</strong>
+      <span>{label}</span>
+    </article>
+  )
+}
+
+function QuickLinkButton({ link }) {
+  const Icon = link.icon
+
+  return (
+    <button type="button">
+      <Icon size={16} />
+      {link.label}
+    </button>
+  )
+}
+
+function EventSummaryCard({ event }) {
+  return (
+    <article className="dashboard-event-card" style={{ borderTopColor: event.color }}>
+      <div className="dashboard-card-title-row">
+        <h3>{event.name}</h3>
+        <StatusBadge status={event.status} />
+      </div>
+      <p>{event.format}</p>
+      <div className="dashboard-event-footer">
+        <span>{event.date}</span>
+        <strong>{event.prize}</strong>
+      </div>
+    </article>
+  )
+}
+
+function SessionRow({ session, compact = false }) {
+  const color = trackColors[session.track]
+
+  return (
+    <article className={compact ? 'dashboard-session compact' : 'dashboard-session'} style={{ borderLeftColor: color }}>
+      <time>{session.time}</time>
+      <div>
+        <h3>{session.title}</h3>
+        <p>
+          <MapPin size={13} />
+          {session.venue}
+        </p>
+      </div>
+      <span style={{ color, borderColor: `${color}55`, background: `${color}14` }}>{session.track}</span>
+    </article>
+  )
+}
+
+function StatusBadge({ status }) {
+  const confirmed = status === 'Confirmed'
+
+  return (
+    <span className={confirmed ? 'dashboard-status confirmed' : 'dashboard-status pending'}>
+      {confirmed && <CheckCircle size={12} />}
+      {status}
+    </span>
+  )
+}
+
+function Meta({ icon: Icon, label, value }) {
+  return (
+    <div className="dashboard-meta">
+      <Icon size={14} />
+      <span>{label}</span>
+      <strong>{value}</strong>
+    </div>
+  )
+}
+
+function SectionHeader({ title, subtitle }) {
+  return (
+    <div className="dashboard-section-header">
+      <h2>{title}</h2>
+      {subtitle && <p>{subtitle}</p>}
+    </div>
+  )
+}
+
+function getInitials(name) {
+  return name
+    .split(' ')
+    .map((part) => part[0])
+    .join('')
 }
