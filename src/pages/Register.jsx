@@ -1,14 +1,14 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { ArrowRight, CheckCircle, Globe, Mic, Trophy, TrendingUp, Users, Zap } from 'lucide-react'
 
 const events = [
-  { id: 'pitch', icon: Trophy, color: '#F5C842', title: 'Startup Pitch Competition', note: 'Present your startup idea to investors and industry leaders.' },
-  { id: 'hackathon', icon: Zap, color: '#E8304A', title: 'Build-a-thon (Hackathon)', note: 'Build tech solutions in a focused product sprint.' },
-  { id: 'keynotes', icon: Mic, color: '#A78BFA', title: 'Founder Keynotes', note: 'Hear real founder stories across all three summit days.' },
-  { id: 'investor', icon: Users, color: '#34D399', title: 'Investor Connect', note: 'Join curated networking sessions with investors and ecosystem leaders.' },
-  { id: 'fest', icon: Globe, color: '#F59E0B', title: 'Innovation Fest', note: 'Showcase projects and startups on the exhibition floor.' },
-  { id: 'workshops', icon: TrendingUp, color: '#60A5FA', title: 'Growth Workshops', note: 'Learn fundraising, product thinking, and growth from operators.' },
+  { id: 'pitch', icon: Trophy, color: '#F5C842', name: 'Startup Pitch Competition', title: 'Startup Pitch Competition', date: 'Sept 15, 2026', format: 'Team pitch + jury Q&A', prize: 'Prize pool: Rs. 50,000', note: 'Present your startup idea to investors and industry leaders.' },
+  { id: 'hackathon', icon: Zap, color: '#E8304A', name: 'Build-a-thon (Hackathon)', title: 'Build-a-thon (Hackathon)', date: 'Sept 15-16, 2026', format: '36-hour team build sprint', prize: 'Prize pool: Rs. 30,000', note: 'Build tech solutions in a focused product sprint.' },
+  { id: 'keynotes', icon: Mic, color: '#A78BFA', name: 'Founder Keynotes', title: 'Founder Keynotes', date: 'Sept 15-17, 2026', format: 'Individual access', prize: 'Included with pass', note: 'Hear real founder stories across all three summit days.' },
+  { id: 'investor', icon: Users, color: '#34D399', name: 'Investor Connect', title: 'Investor Connect', date: 'Sept 16, 2026', format: 'Curated networking', prize: 'Invite-based access', note: 'Join curated networking sessions with investors and ecosystem leaders.' },
+  { id: 'fest', icon: Globe, color: '#F59E0B', name: 'Innovation Fest', title: 'Innovation Fest', date: 'Sept 17, 2026', format: 'Exhibition showcase', prize: 'Prize pool: Rs. 20,000', note: 'Showcase projects and startups on the exhibition floor.' },
+  { id: 'workshops', icon: TrendingUp, color: '#60A5FA', name: 'Growth Workshops', title: 'Growth Workshops', date: 'Sept 15-17, 2026', format: 'Hands-on sessions', prize: 'Certificate', note: 'Learn fundraising, product thinking, and growth from operators.' },
 ]
 
 const steps = ['Personal Details', 'Select Events', 'Confirmation']
@@ -39,6 +39,7 @@ const labelStyle = {
 }
 
 export default function Register() {
+  const navigate = useNavigate()
   const [step, setStep] = useState(1)
   const [submitted, setSubmitted] = useState(false)
   const [participantId, setParticipantId] = useState('')
@@ -95,6 +96,22 @@ export default function Register() {
       const data = await response.json().catch(() => ({}))
 
       if (response.status === 201) {
+        localStorage.setItem('udaan_registration', JSON.stringify({
+          fullName: form.name,
+          email: form.email,
+          phone: form.phone,
+          college: form.college,
+          year: form.year,
+          events: selectedEvents.map((event) => ({
+            id: event.id,
+            name: event.name,
+            date: event.date,
+            format: event.format,
+            prize: event.prize,
+          })),
+          participantId: data.participantId,
+          registeredAt: new Date().toISOString(),
+        }))
         setParticipantId(data.participantId)
         setSubmitted(true)
         return
@@ -137,9 +154,9 @@ export default function Register() {
           <p style={{ color: 'var(--accent)', fontFamily: 'var(--mono)', fontSize: 18, fontWeight: 700, marginBottom: 32 }}>
             {participantId}
           </p>
-          <Link to="/dashboard" className="btn btn-primary">
+          <button type="button" className="btn btn-primary" onClick={() => navigate('/dashboard')}>
             Go to Dashboard <ArrowRight size={15} />
-          </Link>
+          </button>
         </div>
       </main>
     )

@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import {
   Bell,
   Calendar,
@@ -67,13 +68,32 @@ const trackColors = {
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('Overview')
+  const [userData, setUserData] = useState(null)
+  const [showDemoBanner, setShowDemoBanner] = useState(true)
+  const isRealUser = userData !== null
+  const fullName = userData?.fullName || 'Arihant Prasad'
+  const firstName = isRealUser ? fullName.split(' ')[0] : 'Arihant'
+  const dashboardEvents = isRealUser ? normalizeUserEvents(userData.events) : registeredEvents
+  const participantId = userData?.participantId || 'ES26-7482'
+
+  useEffect(() => {
+    const stored = localStorage.getItem('udaan_registration')
+
+    if (stored) {
+      try {
+        setUserData(JSON.parse(stored))
+      } catch {
+        setUserData(null)
+      }
+    }
+  }, [])
 
   return (
     <main className="dashboard-page">
       <aside className="dashboard-sidebar">
         <div className="dashboard-profile">
-          <div className="dashboard-avatar">AP</div>
-          <h1>Arihant Prasad</h1>
+          <div className="dashboard-avatar">{isRealUser ? getInitials(fullName) : 'AP'}</div>
+          <h1>{fullName}</h1>
           <span>Registered Participant</span>
         </div>
 
@@ -92,8 +112,11 @@ export default function Dashboard() {
       </aside>
 
       <section className="dashboard-content">
-        {activeTab === 'Overview' && <Overview />}
-        {activeTab === 'My Events' && <MyEvents />}
+        {!isRealUser && showDemoBanner && (
+          <DemoModeBanner onDismiss={() => setShowDemoBanner(false)} />
+        )}
+        {activeTab === 'Overview' && <Overview firstName={firstName} events={dashboardEvents} participantId={participantId} isRealUser={isRealUser} />}
+        {activeTab === 'My Events' && <MyEvents events={dashboardEvents} />}
         {activeTab === 'Schedule' && <Schedule />}
         {activeTab === 'Networking' && <Networking />}
         {activeTab === 'Notifications' && <Notifications />}
@@ -102,26 +125,26 @@ export default function Dashboard() {
   )
 }
 
-function Overview() {
+function Overview({ firstName, events, participantId, isRealUser }) {
   return (
     <div className="dashboard-stack">
       <section className="dashboard-banner">
         <div>
           <p>Saturday, Sept 12, 2026</p>
-          <h2>Welcome back, Arihant</h2>
+          <h2>Welcome back, {firstName} 👋</h2>
         </div>
-        <span>Reg. ID ES26-7482</span>
+        <span>Reg. ID {participantId}</span>
       </section>
 
       <div className="dashboard-stats">
-        <StatCard icon={Trophy} value="2" label="Events Registered" />
+        <StatCard icon={Trophy} value={isRealUser ? String(events.length) : '2'} label="Events Registered" />
         <StatCard icon={Calendar} value="3" label="Days to Go" />
         <StatCard icon={Bell} value="1" label="Message" />
       </div>
 
       <SectionHeader title="My Registered Events" />
       <div className="dashboard-event-grid">
-        {registeredEvents.map((event) => (
+        {events.map((event) => (
           <EventSummaryCard key={event.name} event={event} />
         ))}
       </div>
@@ -148,12 +171,12 @@ function Overview() {
   )
 }
 
-function MyEvents() {
+function MyEvents({ events }) {
   return (
     <div className="dashboard-stack">
       <SectionHeader title="My Events" subtitle="Your registered summit tracks and current confirmation status." />
       <div className="dashboard-list">
-        {registeredEvents.map((event) => (
+        {events.map((event) => (
           <article key={event.name} className="dashboard-detail-card" style={{ borderLeftColor: event.color }}>
             <div>
               <div className="dashboard-card-title-row">
@@ -226,6 +249,19 @@ function Notifications() {
           </article>
         ))}
       </div>
+    </div>
+  )
+}
+
+function DemoModeBanner({ onDismiss }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, border: '1px solid rgba(245,166,35,0.38)', borderRadius: 8, background: 'rgba(245,166,35,0.1)', padding: '14px 16px', marginBottom: 20 }}>
+      <p style={{ color: 'var(--text)', fontSize: 14 }}>
+        👁️ You're viewing demo data. <Link to="/register" style={{ color: 'var(--accent2)', fontWeight: 700 }}>Register Now</Link> for E-Summit to see your personalized dashboard.
+      </p>
+      <button type="button" onClick={onDismiss} aria-label="Dismiss demo mode banner" style={{ width: 32, height: 32, border: '1px solid rgba(245,166,35,0.35)', borderRadius: 4, background: 'transparent', color: 'var(--accent2)', fontSize: 18, lineHeight: 1 }}>
+        ×
+      </button>
     </div>
   )
 }
@@ -316,8 +352,35 @@ function SectionHeader({ title, subtitle }) {
 }
 
 function getInitials(name) {
-  return name
+  return (name || '')
     .split(' ')
+    .filter(Boolean)
     .map((part) => part[0])
     .join('')
+    .slice(0, 2)
+    .toUpperCase()
+}
+
+function normalizeUserEvents(events = []) {
+  return events.map((event, index) => ({
+    name: event.name,
+    date: event.date || 'Sept 15-17, 2026',
+    format: event.format || 'Registered summit track',
+    prize: event.prize || 'Included with pass',
+    status: 'Confirmed',
+    color: getEventColor(event.id, index),
+  }))
+}
+
+function getEventColor(id, index) {
+  const colors = {
+    pitch: '#F5C842',
+    hackathon: '#E8304A',
+    keynotes: '#A78BFA',
+    investor: '#34D399',
+    fest: '#F59E0B',
+    workshops: '#60A5FA',
+  }
+
+  return colors[id] || ['#F5C842', '#E8304A', '#A78BFA', '#34D399'][index % 4]
 }
