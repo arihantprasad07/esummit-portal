@@ -77,7 +77,7 @@ export default function Home() {
           <div className="tag">E-Cell IIST Indore — Flagship Summit</div>
 
           <h1 style={{ fontSize: 'clamp(48px, 8vw, 108px)', fontWeight: 700, lineHeight: 0.92, marginBottom: 24, textTransform: 'uppercase' }}>
-            <span style={{ display: 'block', fontSize: 'clamp(26px, 4vw, 52px)', color: 'var(--muted)', letterSpacing: '0.02em', marginBottom: 10 }}>E-SUMMIT IIST</span>
+            <span style={{ display: 'block', fontSize: 'clamp(26px, 4vw, 52px)', color: '#ffffff', letterSpacing: '0.02em', marginBottom: 10 }}>E-SUMMIT IIST</span>
             <span style={{ display: 'block', color: 'var(--text)' }}>UDAAN '26</span>
           </h1>
 
@@ -192,28 +192,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <style>{`
-        .home-ticker-track {
-          display: flex;
-          width: max-content;
-          animation: homeTicker 26s linear infinite;
-          color: var(--accent);
-          font-family: var(--mono);
-          font-size: 10px;
-          letter-spacing: 0.18em;
-          white-space: nowrap;
-        }
-
-        .home-ticker-track span {
-          padding-right: 18px;
-        }
-
-        @keyframes homeTicker {
-          from { transform: translateX(0); }
-          to { transform: translateX(-50%); }
-        }
-      `}</style>
     </main>
   )
 }

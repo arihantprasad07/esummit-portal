@@ -51,10 +51,13 @@ export default function Navbar() {
             return (
               <Link key={l.to} to={l.to} onClick={closeMenu} style={{
                 position: 'relative',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
                 fontSize: 14, fontWeight: 500,
                 color: active ? 'var(--text)' : 'var(--muted)',
                 transition: 'color 0.2s',
-                paddingBottom: 8,
+                paddingBottom: 10,
               }}>
                 {l.label}
                 {active && <span style={{ position: 'absolute', left: '50%', bottom: 0, width: 4, height: 4, borderRadius: '50%', background: 'var(--accent2)', transform: 'translateX(-50%)' }} />}

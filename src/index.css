@@ -90,6 +90,26 @@ h1, h2 {
   letter-spacing: -0.03em;
 }
 
+.home-ticker-track {
+  display: flex;
+  width: max-content;
+  animation: homeTicker 26s linear infinite;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  white-space: nowrap;
+}
+
+.home-ticker-track span {
+  padding-right: 18px;
+}
+
+@keyframes homeTicker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
 .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
 .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
 .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
