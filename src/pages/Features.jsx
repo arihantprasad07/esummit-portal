@@ -1,4 +1,5 @@
 import { Award, BarChart2, Bot, Calendar, ClipboardCheck, Users, ArrowRight } from 'lucide-react'
+import useScrollReveal from '../hooks/useScrollReveal'
 
 const features = [
   {
@@ -53,6 +54,8 @@ const journey = [
 ]
 
 export default function Features() {
+  const revealRef = useScrollReveal()
+
   return (
     <main style={{ paddingTop: 64 }}>
       <section style={{ paddingTop: 64, paddingBottom: 48, borderBottom: '1px solid var(--border)', background: 'var(--bg2)' }}>
@@ -70,8 +73,8 @@ export default function Features() {
       <section className="section">
         <div className="container">
           <div className="grid-2" style={{ alignItems: 'stretch' }}>
-            {features.map((feature) => (
-              <FeatureCard key={feature.title} feature={feature} />
+            {features.map((feature, index) => (
+              <FeatureCard key={feature.title} feature={feature} revealRef={revealRef(index)} />
             ))}
           </div>
 
@@ -83,7 +86,7 @@ export default function Features() {
 
             <div className="features-journey">
               {journey.map((item, index) => (
-                <div key={item.step} className="features-journey-item">
+                <div key={item.step} className="features-journey-item reveal" ref={revealRef(features.length + index)}>
                   <article>
                     <span>{item.step}</span>
                     <h3>{item.title}</h3>
@@ -110,11 +113,12 @@ export default function Features() {
           min-height: 230px;
           display: flex;
           flex-direction: column;
-          transition: border-color 0.2s, transform 0.2s;
+          transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
         }
 
         .features-card:hover {
-          transform: translateY(-2px);
+          transform: translateY(-4px);
+          box-shadow: 0 18px 44px rgba(0,0,0,0.28);
         }
 
         .features-card-top {
@@ -225,11 +229,11 @@ export default function Features() {
   )
 }
 
-function FeatureCard({ feature }) {
+function FeatureCard({ feature, revealRef }) {
   const Icon = feature.icon
 
   return (
-    <article className="features-card" style={{ borderTop: `3px solid ${feature.color}` }}>
+    <article className="features-card reveal" ref={revealRef} style={{ borderTop: `3px solid ${feature.color}` }}>
       <div className="features-card-top">
         <div className="features-icon" style={{ background: `${feature.color}18`, color: feature.color }}>
           <Icon size={21} />

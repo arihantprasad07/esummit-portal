@@ -17,6 +17,7 @@ const years = ['1st', '2nd', '3rd', '4th']
 const inputStyle = {
   width: '100%',
   padding: '12px 14px',
+  minHeight: 44,
   background: 'var(--bg)',
   border: '1px solid var(--border2)',
   borderRadius: 4,
@@ -194,6 +195,19 @@ export default function Register() {
       </section>
 
       <style>{`
+        .register-progress {
+          display: flex;
+          align-items: center;
+          margin-bottom: 36px;
+          overflow-x: auto;
+          padding-bottom: 4px;
+          scrollbar-width: none;
+        }
+
+        .register-progress::-webkit-scrollbar {
+          display: none;
+        }
+
         .register-field-grid,
         .register-event-grid {
           display: grid;
@@ -312,6 +326,15 @@ export default function Register() {
             align-items: flex-start;
             flex-direction: column;
           }
+
+          .register-actions > div {
+            width: 100%;
+            flex-direction: column;
+          }
+
+          .register-actions .btn {
+            width: 100%;
+          }
         }
       `}</style>
     </main>
@@ -320,13 +343,13 @@ export default function Register() {
 
 function ProgressBar({ activeStep }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', marginBottom: 36 }}>
+    <div className="register-progress">
       {steps.map((label, index) => {
         const stepNumber = index + 1
         const active = activeStep >= stepNumber
 
         return (
-          <div key={label} style={{ display: 'flex', alignItems: 'center', flex: index < steps.length - 1 ? 1 : 'none' }}>
+          <div key={label} style={{ display: 'flex', alignItems: 'center', flex: index < steps.length - 1 ? 1 : 'none', minWidth: 116 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <div style={{ width: 30, height: 30, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: active ? 'var(--accent)' : 'var(--card)', border: active ? '1px solid var(--accent)' : '1px solid var(--border2)', color: active ? '#fff' : 'var(--muted)', fontWeight: 700, fontSize: 12 }}>
                 {stepNumber}

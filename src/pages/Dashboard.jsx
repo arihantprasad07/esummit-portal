@@ -108,7 +108,7 @@ function Overview() {
       <section className="dashboard-banner">
         <div>
           <p>Saturday, Sept 12, 2026</p>
-          <h2>Welcome back, Arihant 👋</h2>
+          <h2>Welcome back, Arihant</h2>
         </div>
         <span>Reg. ID ES26-7482</span>
       </section>

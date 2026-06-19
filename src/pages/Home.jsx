@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Zap, Users, Trophy, Mic, Globe, TrendingUp } from 'lucide-react'
+import useScrollReveal from '../hooks/useScrollReveal'
 
 function useCountdown(target) {
   const [time, setTime] = useState({})
@@ -30,10 +31,10 @@ function useCountdown(target) {
 }
 
 const stats = [
-  { value: '5000+', label: 'Registrations' },
-  { value: '40+', label: 'Speakers' },
-  { value: '10L+', label: 'Prize Pool' },
-  { value: 'Sept', label: '2026' },
+  { value: '500+', label: 'Expected Participants' },
+  { value: '10+', label: 'Speakers & Mentors' },
+  { value: '₹1,00,000+', label: 'Prize Pool' },
+  { value: 'Sept 2026', label: 'Summit Dates' },
 ]
 
 const highlights = [
@@ -60,6 +61,7 @@ function CountBox({ value, label }) {
 
 export default function Home() {
   const time = useCountdown('2026-09-15T09:00:00')
+  const revealRef = useScrollReveal()
 
   return (
     <main>
@@ -72,11 +74,18 @@ export default function Home() {
       <section style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', position: 'relative', overflow: 'hidden', paddingTop: 92 }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)', backgroundSize: '60px 60px', zIndex: 0 }} />
         <div style={{ position: 'absolute', top: '18%', left: '52%', transform: 'translateX(-50%)', width: 680, height: 680, background: 'radial-gradient(circle, rgba(193,18,31,0.16) 0%, rgba(245,166,35,0.07) 34%, transparent 70%)', zIndex: 0 }} />
+        <div className="hero-art" aria-hidden="true">
+          <div className="hero-blob" />
+          <div className="hero-shape circle one" />
+          <div className="hero-shape square two" />
+          <div className="hero-shape circle three" />
+          <div className="hero-shape square four" />
+        </div>
 
         <div className="container" style={{ position: 'relative', zIndex: 1, paddingTop: 60, paddingBottom: 80 }}>
           <div className="tag">E-Cell IIST Indore — Flagship Summit</div>
 
-          <h1 style={{ fontSize: 'clamp(48px, 8vw, 108px)', fontWeight: 700, lineHeight: 0.92, marginBottom: 24, textTransform: 'uppercase' }}>
+          <h1 className="hero-lockup" style={{ fontSize: 'clamp(44px, 8vw, 108px)', fontWeight: 700, lineHeight: 0.92, marginBottom: 24, textTransform: 'uppercase' }}>
             <span style={{ display: 'block', fontSize: 'clamp(26px, 4vw, 52px)', color: '#ffffff', letterSpacing: '0.02em', marginBottom: 10 }}>E-SUMMIT IIST</span>
             <span style={{ display: 'block', color: 'var(--text)' }}>UDAAN '26</span>
           </h1>
@@ -101,7 +110,7 @@ export default function Home() {
             <p style={{ fontSize: 12, fontFamily: 'var(--mono)', letterSpacing: '0.12em', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 20 }}>
               — Summit begins in
             </p>
-            <div style={{ display: 'flex', gap: 32, alignItems: 'center', flexWrap: 'wrap' }}>
+            <div className="home-countdown-grid">
               <CountBox value={time.d ?? '--'} label="Days" />
               <span style={{ color: 'var(--border2)', fontSize: 36, fontFamily: 'var(--mono)', marginBottom: 14 }}>:</span>
               <CountBox value={time.h ?? '--'} label="Hours" />
@@ -122,7 +131,7 @@ export default function Home() {
       <div style={{ height: 2, background: 'var(--gradient)' }} />
 
       <div style={{ background: 'var(--card)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
-        <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', padding: '36px 24px' }}>
+        <div className="container home-stats-grid reveal" ref={revealRef(0)}>
           {stats.map((s) => (
             <div key={s.label} style={{ textAlign: 'center', borderRight: '1px solid var(--border)' }}>
               <div style={{ fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: 700, fontFamily: 'var(--mono)', color: 'var(--accent)' }}>{s.value}</div>
@@ -145,18 +154,19 @@ export default function Home() {
               <Link
                 to="/events"
                 key={h.title}
+                ref={revealRef(i + 1)}
+                className="polish-card reveal"
                 style={{
                   background: 'var(--card)',
                   border: '1px solid var(--border)',
                   borderRadius: 8,
                   padding: 28,
                   display: 'block',
-                  transition: 'all 0.2s',
                   position: 'relative',
                   overflow: 'hidden',
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(193,18,31,0.45)'; e.currentTarget.style.transform = 'translateY(-3px)' }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.transform = 'translateY(0)' }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(193,18,31,0.45)' }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)' }}
               >
                 <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: i % 2 === 0 ? 'var(--gradient)' : 'var(--accent2)', opacity: 0.75 }} />
                 <div style={{ width: 44, height: 44, background: 'rgba(193,18,31,0.1)', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>

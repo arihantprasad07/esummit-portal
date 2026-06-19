@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Clock, MapPin } from 'lucide-react'
+import useScrollReveal from '../hooks/useScrollReveal'
 
 const days = [
   { id: 1, label: 'Day 1 — Sept 15' },
@@ -50,6 +51,7 @@ const trackColors = {
 export default function Schedule() {
   const [activeDay, setActiveDay] = useState(1)
   const [activeFilter, setActiveFilter] = useState('All')
+  const revealRef = useScrollReveal()
 
   const sessions = schedule[activeDay] || []
   const visibleCount = sessions.filter((session) => isVisible(session, activeFilter)).length
@@ -70,7 +72,7 @@ export default function Schedule() {
 
       <section className="section">
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: 10, marginBottom: 22 }}>
+          <div className="schedule-tabs">
             {days.map((day) => {
               const selected = activeDay === day.id
 
@@ -96,7 +98,7 @@ export default function Schedule() {
             })}
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 36 }}>
+          <div className="schedule-filters">
             {filters.map((filter) => {
               const selected = activeFilter === filter
               const color = filter === 'All' ? '#E8304A' : trackColors[filter]
@@ -125,7 +127,7 @@ export default function Schedule() {
           <div style={{ display: 'grid', gridTemplateColumns: '72px 1fr', gap: 20, position: 'relative' }}>
             <div aria-hidden="true" style={{ position: 'absolute', top: 8, bottom: 8, left: 88, width: 1, background: 'var(--border)' }} />
 
-            {sessions.map((session) => {
+            {sessions.map((session, index) => {
               const color = trackColors[session.track]
               const visible = isVisible(session, activeFilter)
 
@@ -138,6 +140,8 @@ export default function Schedule() {
                   }}
                 >
                   <div
+                    ref={revealRef(index)}
+                    className="reveal"
                     style={{
                       color: visible ? 'var(--muted)' : 'transparent',
                       fontFamily: 'var(--mono)',

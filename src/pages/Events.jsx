@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Trophy, Zap, Mic, Users, Globe, TrendingUp, ArrowRight, Clock, Calendar, Award } from 'lucide-react'
+import useScrollReveal from '../hooks/useScrollReveal'
 
 const events = [
   {
@@ -11,7 +12,7 @@ const events = [
     tagline: 'Present. Persuade. Prevail.',
     desc: 'The centerpiece of E-Summit. Teams of 2–4 pitch their startup idea to a panel of investors and industry leaders. Shortlisted teams get mentoring sessions before the final pitch.',
     date: 'Sept 15, 2026', duration: '8 hours',
-    prize: '₹5,00,000', seats: 80,
+    prize: '₹50,000', seats: 80,
     format: 'Team (2–4)', rounds: ['Screening Deck', 'Semi-Final Pitch', 'Grand Finale'],
     highlights: ['Live VC feedback', 'Mentoring before finals', 'Investor intros post-event'],
   },
@@ -22,7 +23,7 @@ const events = [
     tagline: '36 hours. One problem. Your solution.',
     desc: 'A 36-hour product sprint where teams build tech solutions to real-world problem statements released at the start. Judged on impact, feasibility, and execution.',
     date: 'Sept 15–16, 2026', duration: '36 hours',
-    prize: '₹2,50,000', seats: 200,
+    prize: '₹30,000', seats: 200,
     format: 'Team (2–5)', rounds: ['Problem reveal', 'Build sprint', 'Demo Day'],
     highlights: ['Cloud credits provided', 'Mentor support throughout', 'Best use-of-AI award'],
   },
@@ -55,7 +56,7 @@ const events = [
     tagline: 'Show the world what you\'re building.',
     desc: 'An open exhibition floor where student innovators, startups, and college projects display their work. Attendees vote for their favorites alongside expert judges.',
     date: 'Sept 17, 2026', duration: '6 hours',
-    prize: '₹1,00,000', seats: 150,
+    prize: '₹20,000', seats: 150,
     format: 'Individual / Team', rounds: [],
     highlights: ['People\'s choice award', 'Expert evaluation', 'Media coverage'],
   },
@@ -75,6 +76,7 @@ const events = [
 export default function Events() {
   const [active, setActive] = useState(null)
   const selected = active !== null ? events.find(e => e.id === active) : null
+  const revealRef = useScrollReveal()
 
   return (
     <main style={{ paddingTop: 64 }}>
@@ -88,14 +90,16 @@ export default function Events() {
 
       <section className="section">
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: selected ? '1fr 380px' : '1fr', gap: 24, transition: 'all 0.3s' }}>
+          <div className={selected ? 'events-layout has-selection' : 'events-layout'}>
             <div className="grid-2" style={{ alignContent: 'start' }}>
-              {events.map(ev => (
+              {events.map((ev, index) => (
                 <div key={ev.id}
+                  ref={revealRef(index)}
+                  className="polish-card reveal"
                   onClick={() => setActive(active === ev.id ? null : ev.id)}
                   style={{
                     background: 'var(--card)', border: `1px solid ${active === ev.id ? ev.color : 'var(--border)'}`,
-                    borderRadius: 8, padding: 24, cursor: 'pointer', transition: 'all 0.2s',
+                    borderRadius: 8, padding: 24, cursor: 'pointer',
                     position: 'relative', overflow: 'hidden',
                   }}
                   onMouseEnter={e => e.currentTarget.style.borderColor = ev.color}
@@ -125,7 +129,7 @@ export default function Events() {
             </div>
 
             {selected && (
-              <div style={{ position: 'sticky', top: 80, background: 'var(--card)', border: `1px solid ${selected.color}44`, borderRadius: 10, padding: 28, height: 'fit-content' }}>
+              <div className="events-detail-panel" style={{ background: 'var(--card)', border: `1px solid ${selected.color}44`, borderRadius: 10, padding: 28, height: 'fit-content' }}>
                 <div style={{ height: 3, background: selected.color, borderRadius: 2, marginBottom: 20, opacity: 0.8 }} />
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
                   <selected.icon size={20} color={selected.color} />
