@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   Bell,
@@ -68,32 +68,27 @@ const trackColors = {
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('Overview')
-  const [userData, setUserData] = useState(null)
+  const [userData] = useState(() => {
+    try {
+      const stored = localStorage.getItem('udaan_registration')
+      return stored ? JSON.parse(stored) : null
+    } catch {
+      return null
+    }
+  })
   const [showDemoBanner, setShowDemoBanner] = useState(true)
   const isRealUser = userData !== null
-  const fullName = userData?.fullName || 'Arihant Prasad'
-  const firstName = isRealUser ? fullName.split(' ')[0] : 'Arihant'
-  const dashboardEvents = isRealUser ? normalizeUserEvents(userData.events) : registeredEvents
+  const displayName = userData?.firstName || 'Arihant Prasad'
+  const firstName = isRealUser ? userData.firstName : 'Arihant'
+  const dashboardEvents = isRealUser ? normalizeUserEvents(userData.eventNames) : registeredEvents
   const participantId = userData?.participantId || 'ES26-7482'
-
-  useEffect(() => {
-    const stored = localStorage.getItem('udaan_registration')
-
-    if (stored) {
-      try {
-        setUserData(JSON.parse(stored))
-      } catch {
-        setUserData(null)
-      }
-    }
-  }, [])
 
   return (
     <main className="dashboard-page">
       <aside className="dashboard-sidebar">
         <div className="dashboard-profile">
-          <div className="dashboard-avatar">{isRealUser ? getInitials(fullName) : 'AP'}</div>
-          <h1>{fullName}</h1>
+          <div className="dashboard-avatar">{isRealUser ? getInitials(displayName) : 'AP'}</div>
+          <h1>{displayName}</h1>
           <span>Registered Participant</span>
         </div>
 
@@ -114,6 +109,13 @@ export default function Dashboard() {
       <section className="dashboard-content">
         {!isRealUser && showDemoBanner && (
           <DemoModeBanner onDismiss={() => setShowDemoBanner(false)} />
+        )}
+        {!isRealUser && (
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 14 }}>
+            <span style={{ color: 'var(--muted)', border: '1px solid var(--border)', borderRadius: 999, padding: '3px 9px', fontFamily: 'var(--mono)', fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+              Demo data
+            </span>
+          </div>
         )}
         {activeTab === 'Overview' && <Overview firstName={firstName} events={dashboardEvents} participantId={participantId} isRealUser={isRealUser} />}
         {activeTab === 'My Events' && <MyEvents events={dashboardEvents} />}
@@ -361,26 +363,26 @@ function getInitials(name) {
     .toUpperCase()
 }
 
-function normalizeUserEvents(events = []) {
-  return events.map((event, index) => ({
-    name: event.name,
-    date: event.date || 'Sept 15-17, 2026',
-    format: event.format || 'Registered summit track',
-    prize: event.prize || 'Included with pass',
+function normalizeUserEvents(eventNames = []) {
+  return eventNames.map((eventName, index) => ({
+    name: eventName,
+    date: 'Sept 15-17, 2026',
+    format: 'Registered summit track',
+    prize: 'Included with pass',
     status: 'Confirmed',
-    color: getEventColor(event.id, index),
+    color: getEventColor(eventName, index),
   }))
 }
 
-function getEventColor(id, index) {
+function getEventColor(name, index) {
   const colors = {
-    pitch: '#F5C842',
-    hackathon: '#E8304A',
-    keynotes: '#A78BFA',
-    investor: '#34D399',
-    fest: '#F59E0B',
-    workshops: '#60A5FA',
+    'Startup Pitch Competition': '#F5C842',
+    'Build-a-thon (Hackathon)': '#E8304A',
+    'Founder Keynotes': '#A78BFA',
+    'Investor Connect': '#34D399',
+    'Innovation Fest': '#F59E0B',
+    'Growth Workshops': '#60A5FA',
   }
 
-  return colors[id] || ['#F5C842', '#E8304A', '#A78BFA', '#34D399'][index % 4]
+  return colors[name] || ['#F5C842', '#E8304A', '#A78BFA', '#34D399'][index % 4]
 }

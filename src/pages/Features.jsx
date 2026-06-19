@@ -13,8 +13,8 @@ const features = [
     icon: BarChart2,
     title: 'Live Leaderboards',
     description: 'Real-time rankings for Startup Pitch and Hackathon competitions. Points update as rounds progress.',
-    status: 'Live',
-    color: '#34D399',
+    status: 'Planned',
+    color: '#A78BFA',
   },
   {
     icon: Bot,
@@ -26,9 +26,9 @@ const features = [
   {
     icon: Users,
     title: 'Participant Networking Wall',
-    description: 'Attendees can create profiles, browse other participants by interest, and send connection requests before the event.',
-    status: 'Live',
-    color: '#34D399',
+    description: 'A static participant directory preview shows sample attendees and interests while full connection requests are planned.',
+    status: 'Planned',
+    color: '#A78BFA',
   },
   {
     icon: Award,

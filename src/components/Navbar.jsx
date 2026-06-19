@@ -70,7 +70,12 @@ export default function Navbar() {
           Register Now
         </Link>
 
-        <button onClick={() => setOpen(!open)} style={{ display: 'none', background: 'none', border: 'none', color: 'var(--text)', minWidth: 44, minHeight: 44, alignItems: 'center', justifyContent: 'center' }} className="hamburger">
+        <button
+          onClick={() => setOpen(!open)}
+          aria-label={open ? 'Close navigation menu' : 'Open navigation menu'}
+          style={{ display: 'none', background: 'none', border: 'none', color: 'var(--text)', minWidth: 44, minHeight: 44, alignItems: 'center', justifyContent: 'center' }}
+          className="hamburger"
+        >
           {open ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>

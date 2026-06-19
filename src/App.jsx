@@ -33,6 +33,7 @@ function RouteTransition({ location }) {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' })
     const id = window.requestAnimationFrame(() => setVisible(true))
     return () => window.cancelAnimationFrame(id)
   }, [])

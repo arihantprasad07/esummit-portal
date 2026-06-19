@@ -18,11 +18,15 @@ export default function Footer() {
               The flagship entrepreneurship summit of E-Cell IIST Indore - building the founders of tomorrow.
             </p>
             <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
-              {[Globe, Link2, Mail].map((Icon, index) => (
+              {[
+                { Icon: Globe, label: 'Visit E-Cell website' },
+                { Icon: Link2, label: 'Open E-Summit links' },
+                { Icon: Mail, label: 'Email E-Cell IIST' },
+              ].map(({ Icon, label }) => (
                 <a
-                  key={index}
+                  key={label}
                   href="#"
-                  aria-label="Social link"
+                  aria-label={label}
                   style={{ width: 44, aspectRatio: 1, border: '1px solid var(--border2)', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--muted)', transition: 'all 0.2s' }}
                   onMouseEnter={(event) => { event.currentTarget.style.borderColor = 'var(--accent)'; event.currentTarget.style.color = 'var(--accent)' }}
                   onMouseLeave={(event) => { event.currentTarget.style.borderColor = 'var(--border2)'; event.currentTarget.style.color = 'var(--muted)' }}

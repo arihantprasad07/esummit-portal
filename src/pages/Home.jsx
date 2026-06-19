@@ -10,7 +10,7 @@ function useCountdown(target) {
     const tick = () => {
       const diff = new Date(target) - new Date()
       if (diff <= 0) {
-        setTime({ d: 0, h: 0, m: 0, s: 0 })
+        setTime({ d: 0, h: 0, m: 0, s: 0, isLive: true })
         return
       }
 
@@ -19,6 +19,7 @@ function useCountdown(target) {
         h: Math.floor((diff % 86400000) / 3600000),
         m: Math.floor((diff % 3600000) / 60000),
         s: Math.floor((diff % 60000) / 1000),
+        isLive: false,
       })
     }
 
@@ -110,15 +111,21 @@ export default function Home() {
             <p style={{ fontSize: 12, fontFamily: 'var(--mono)', letterSpacing: '0.12em', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 20 }}>
               — Summit begins in
             </p>
-            <div className="home-countdown-grid">
-              <CountBox value={time.d ?? '--'} label="Days" />
-              <span style={{ color: 'var(--border2)', fontSize: 36, fontFamily: 'var(--mono)', marginBottom: 14 }}>:</span>
-              <CountBox value={time.h ?? '--'} label="Hours" />
-              <span style={{ color: 'var(--border2)', fontSize: 36, fontFamily: 'var(--mono)', marginBottom: 14 }}>:</span>
-              <CountBox value={time.m ?? '--'} label="Minutes" />
-              <span style={{ color: 'var(--border2)', fontSize: 36, fontFamily: 'var(--mono)', marginBottom: 14 }}>:</span>
-              <CountBox value={time.s ?? '--'} label="Seconds" />
-            </div>
+            {time.isLive ? (
+              <p style={{ color: 'var(--accent2)', fontSize: 'clamp(18px, 3vw, 26px)', fontWeight: 700 }}>
+                UDAAN '26 is live - see you there!
+              </p>
+            ) : (
+              <div className="home-countdown-grid">
+                <CountBox value={time.d ?? '--'} label="Days" />
+                <span style={{ color: 'var(--border2)', fontSize: 36, fontFamily: 'var(--mono)', marginBottom: 14 }}>:</span>
+                <CountBox value={time.h ?? '--'} label="Hours" />
+                <span style={{ color: 'var(--border2)', fontSize: 36, fontFamily: 'var(--mono)', marginBottom: 14 }}>:</span>
+                <CountBox value={time.m ?? '--'} label="Minutes" />
+                <span style={{ color: 'var(--border2)', fontSize: 36, fontFamily: 'var(--mono)', marginBottom: 14 }}>:</span>
+                <CountBox value={time.s ?? '--'} label="Seconds" />
+              </div>
+            )}
           </div>
         </div>
 

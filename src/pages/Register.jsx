@@ -24,7 +24,6 @@ const inputStyle = {
   color: 'var(--text)',
   fontSize: 14,
   fontFamily: 'var(--font)',
-  outline: 'none',
   transition: 'border-color 0.2s',
 }
 
@@ -97,19 +96,9 @@ export default function Register() {
 
       if (response.status === 201) {
         localStorage.setItem('udaan_registration', JSON.stringify({
-          fullName: form.name,
-          email: form.email,
-          phone: form.phone,
-          college: form.college,
-          year: form.year,
-          events: selectedEvents.map((event) => ({
-            id: event.id,
-            name: event.name,
-            date: event.date,
-            format: event.format,
-            prize: event.prize,
-          })),
           participantId: data.participantId,
+          firstName: form.name.trim().split(' ')[0],
+          eventNames: selectedEvents.map((event) => event.name),
           registeredAt: new Date().toISOString(),
         }))
         setParticipantId(data.participantId)

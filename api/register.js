@@ -22,6 +22,10 @@ function isNonEmptyString(value) {
   return typeof value === 'string' && value.trim().length > 0
 }
 
+function normalizePhone(value) {
+  return value.replace(/[\s-]/g, '')
+}
+
 function generateParticipantId() {
   const letters = Array.from({ length: 3 }, () => String.fromCharCode(65 + Math.floor(Math.random() * 26))).join('')
   const digits = String(Math.floor(Math.random() * 1000)).padStart(3, '0')
@@ -93,6 +97,8 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Please enter a valid phone number' })
     }
 
+    const phoneNormalized = normalizePhone(normalizedPhone)
+
     if (!isNonEmptyString(college)) {
       return res.status(400).json({ error: 'College is required' })
     }
@@ -101,10 +107,15 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'At least one event is required' })
     }
 
-    const existingRegistration = await collection.findOne({ email: normalizedEmail })
+    const existingRegistration = await collection.findOne({
+      $or: [
+        { email: normalizedEmail },
+        { phoneNormalized },
+      ],
+    })
 
     if (existingRegistration) {
-      return res.status(409).json({ error: 'This email is already registered' })
+      return res.status(409).json({ error: 'This email or phone number is already registered' })
     }
 
     const participantId = generateParticipantId()
@@ -113,6 +124,7 @@ export default async function handler(req, res) {
       fullName: fullName.trim(),
       email: normalizedEmail,
       phone: normalizedPhone,
+      phoneNormalized,
       college: college.trim(),
       year: isNonEmptyString(year) ? year.trim() : '',
       events,

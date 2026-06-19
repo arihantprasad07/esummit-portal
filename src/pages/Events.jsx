@@ -96,7 +96,15 @@ export default function Events() {
                 <div key={ev.id}
                   ref={revealRef(index)}
                   className="polish-card reveal"
+                  role="button"
+                  tabIndex={0}
                   onClick={() => setActive(active === ev.id ? null : ev.id)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault()
+                      setActive(active === ev.id ? null : ev.id)
+                    }
+                  }}
                   style={{
                     background: 'var(--card)', border: `1px solid ${active === ev.id ? ev.color : 'var(--border)'}`,
                     borderRadius: 8, padding: 24, cursor: 'pointer',
