@@ -41,6 +41,9 @@ const labelStyle = {
 export default function Register() {
   const [step, setStep] = useState(1)
   const [submitted, setSubmitted] = useState(false)
+  const [participantId, setParticipantId] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -52,10 +55,12 @@ export default function Register() {
 
   const handleInput = (event) => {
     const { name, value } = event.target
+    setSubmitError('')
     setForm((current) => ({ ...current, [name]: value }))
   }
 
   const toggleEvent = (id) => {
+    setSubmitError('')
     setForm((current) => ({
       ...current,
       events: current.events.includes(id)
@@ -66,6 +71,57 @@ export default function Register() {
 
   const selectedEvents = events.filter((event) => form.events.includes(event.id))
   const canContinueDetails = form.name && form.email && form.phone && form.college && form.year
+
+  const handleConfirmRegistration = async () => {
+    setSubmitting(true)
+    setSubmitError('')
+
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fullName: form.name,
+          email: form.email,
+          phone: form.phone,
+          college: form.college,
+          year: form.year,
+          events: form.events,
+        }),
+      })
+
+      const data = await response.json().catch(() => ({}))
+
+      if (response.status === 201) {
+        setParticipantId(data.participantId)
+        setSubmitted(true)
+        return
+      }
+
+      if (response.status === 409) {
+        setSubmitError('This email is already registered for E-Summit')
+        return
+      }
+
+      if (response.status === 429) {
+        setSubmitError('Too many attempts, please wait a few minutes')
+        return
+      }
+
+      if (response.status === 400) {
+        setSubmitError(data.error || 'Please check your registration details')
+        return
+      }
+
+      setSubmitError('Something went wrong. Please try again.')
+    } catch {
+      setSubmitError('Something went wrong. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   if (submitted) {
     return (
@@ -79,7 +135,7 @@ export default function Register() {
             Participant ID
           </p>
           <p style={{ color: 'var(--accent)', fontFamily: 'var(--mono)', fontSize: 18, fontWeight: 700, marginBottom: 32 }}>
-            IIST-2026-AP001
+            {participantId}
           </p>
           <Link to="/dashboard" className="btn btn-primary">
             Go to Dashboard <ArrowRight size={15} />
@@ -146,7 +202,7 @@ export default function Register() {
                 <div className="register-actions">
                   <p>{form.events.length} events selected</p>
                   <div>
-                    <button type="button" className="btn btn-outline" onClick={() => setStep(1)}>Back</button>
+                    <button type="button" className="btn btn-outline" onClick={() => { setSubmitError(''); setStep(1) }}>Back</button>
                     <button type="button" className="btn btn-primary" onClick={() => setStep(3)} disabled={form.events.length === 0}>
                       Next <ArrowRight size={15} />
                     </button>
@@ -182,10 +238,15 @@ export default function Register() {
                     </div>
                   </div>
                 </div>
+                {submitError && (
+                  <div className="register-error-banner" role="alert">
+                    {submitError}
+                  </div>
+                )}
                 <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                  <button type="button" className="btn btn-outline" onClick={() => setStep(2)}>Back</button>
-                  <button type="button" className="btn btn-primary" onClick={() => setSubmitted(true)}>
-                    Confirm Registration <CheckCircle size={15} />
+                  <button type="button" className="btn btn-outline" onClick={() => { setSubmitError(''); setStep(2) }} disabled={submitting}>Back</button>
+                  <button type="button" className="btn btn-primary" onClick={handleConfirmRegistration} disabled={submitting}>
+                    {submitting ? 'Registering...' : 'Confirm Registration'} {!submitting && <CheckCircle size={15} />}
                   </button>
                 </div>
               </section>
@@ -295,6 +356,25 @@ export default function Register() {
         .register-actions > div {
           display: flex;
           gap: 12px;
+        }
+
+        .register-error-banner {
+          border: 1px solid rgba(232,48,74,0.55);
+          border-radius: 6px;
+          background: rgba(232,48,74,0.12);
+          color: #ffb4c0;
+          font-size: 14px;
+          font-weight: 600;
+          margin-bottom: 16px;
+          padding: 12px 14px;
+        }
+
+        .btn:disabled,
+        .register-event-card:disabled {
+          cursor: not-allowed;
+          opacity: 0.58;
+          transform: none;
+          filter: none;
         }
 
         .register-summary-row {
